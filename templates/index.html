@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Story Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4ca0af;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0a0b0a;
+        }
+        #output {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Story Generator</h1>
+    <form id="story-form">
+        <label for="character">Main Character:</label>
+        <input type="text" id="character" name="character" placeholder="e.g., A young wizard" required>
+
+        <label for="setting">Setting:</label>
+        <input type="text" id="setting" name="setting" placeholder="e.g., An enchanted forest" required>
+
+        <label for="theme">Theme:</label>
+        <input type="text" id="theme" name="theme" placeholder="e.g., Friendship and loyalty" required>
+
+        <button type="submit">Generate Story</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        const form = document.getElementById('story-form');
+        const outputDiv = document.getElementById('output');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.story) {
+                    outputDiv.innerHTML = `<h3>Generated Story:</h3><p>${data.story}</p>`;
+                } else if (data.error) {
+                    outputDiv.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                outputDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
